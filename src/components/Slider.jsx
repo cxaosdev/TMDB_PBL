@@ -1,7 +1,7 @@
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import React from "react";
-import MovieCard from "./MovieCard"; // MovieCard를 import합니다.
+import MovieCard from "./MovieCard";
 
 export default function Slider({ movies }) {
   return (

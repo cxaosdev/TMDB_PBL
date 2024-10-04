@@ -62,7 +62,7 @@ export default function NavBar() {
       </div>
 
       {menuOpen && (
-        <ul className="absolute top-[80px] left-0 w-full bg-black text-center flex flex-col gap-7 py-4">
+        <ul className="top-[80px] left-0 w-full bg-black text-center flex flex-col gap-7 py-4">
           <li className="cursor-pointer" onClick={onClickSignUp}>
             회원가입
           </li>

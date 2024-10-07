@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { BASE_URL } from "./MovieCard";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-// import dummy from "/src/data/movieDetailData.json";
 
 export default function MovieDetail() {
   const { title } = useParams();
@@ -48,36 +47,37 @@ export default function MovieDetail() {
 
   return (
     <>
-      <div className="flex items-center justify-center bg-zinc-900 h-[100vh]">
+      <div className="relative flex items-center justify-center bg-zinc-900 h-[100vh]">
         <div
           style={{
             backgroundImage: `url(${BASE_URL + detail.backdrop_path})`,
             backgroundSize: "cover",
             backgroundPosition: "center",
             backgroundRepeat: "no-repeat",
-            backgroundBlendMode: "color-burn",
+            filter: "brightness(15%)",
           }}
-          className="grid grid-cols-1 md:grid-cols-2 items-center p-8 rounded-2xl shadow-lg max-w-[1000px] relative "
+          className="absolute top-0 left-0 w-full h-full"
+        />
+        <p
+          onClick={() => navigate(-1)}
+          className="absolute text-[40px] top-5 left-10 text-white cursor-pointer z-20"
         >
-          <p
-            onClick={() => navigate(-1)}
-            className="absolute text-[40px] top-0 left-4 text-white cursor-pointer"
-          >
-            ×
-          </p>
-          <div className="flex items-start justify-center m-20 ">
+          ×
+        </p>
+        <div className="relative grid grid-cols-1 md:grid-cols-2 items-center p-8 rounded-2xl shadow-lg max-w-[1000px] z-10">
+          <div className="flex items-start justify-center mr-[70px]">
             <img
-              className=" h-[400px] rounded-lg shadow-md"
+              className=" h-[400px] rounded-lg shadow-md "
               src={BASE_URL + detail.poster_path}
               alt="영화 포스터 이미지"
             />
           </div>
-          <div className="bg-zinc-950 bg-opacity-80 rounded-2xl h-[400px] flex items-center">
+          <div className=" rounded-2xl h-[400px] flex items-center">
             <div className="p-4 space-y-4 text-white">
               <h1 className="text-4xl font-[900] text-center">
                 {detail.title}
               </h1>
-              <p className="text-center text-xl text-red-700 font-extrabold text-[25px]">
+              <p className="text-center text-xl text-red-600 font-extrabold text-[25px]">
                 {detail.vote_average}
               </p>
               {detail.genres && (

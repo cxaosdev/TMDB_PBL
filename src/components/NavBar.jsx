@@ -1,27 +1,21 @@
 import React, { useState, useEffect } from "react";
-import { FaBars, FaTimes } from "react-icons/fa";
+import { FaBars, FaTimes, FaSearch } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import useDebounce from "../hooks/useDebounce";
 
 export default function NavBar() {
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
-
-  const toggleMenu = () => {
-    setMenuOpen(!menuOpen);
-  };
-
-  const onClickHome = () => {
-    navigate("/");
-  };
-  const onClickLogIn = () => {
-    navigate(`/Login`);
-  };
-  const onClickSignUp = () => {
-    navigate(`/Signup`);
-  };
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
+  const [showSearch, setShowSearch] = useState(false);
+  const debouncedSearchQuery = useDebounce(searchQuery, 500);
 
   useEffect(() => {
     const handleResize = () => {
+      if (window.innerWidth >= 640) {
+        setShowSearch(false);
+      }
       if (window.innerWidth >= 768) {
         setMenuOpen(false);
       }
@@ -34,21 +28,93 @@ export default function NavBar() {
     };
   }, []);
 
+  const toggleMenu = () => {
+    setMenuOpen(!menuOpen);
+  };
+
+  const toggleSearch = () => {
+    setShowSearch(!showSearch);
+  };
+
+  useEffect(() => {
+    if (debouncedSearchQuery) {
+      fetch(
+        `https://api.themoviedb.org/3/search/movie?api_key=${
+          import.meta.env.VITE_TMDB_API_KEY
+        }&query=${debouncedSearchQuery}&language=ko`
+      )
+        .then((res) => res.json())
+        .then((data) => setSearchResults(data.results))
+        .catch((error) =>
+          console.error("Error fetching search results:", error)
+        );
+    } else {
+      setSearchResults([]);
+    }
+  }, [debouncedSearchQuery]);
+
   return (
-    <div className="fixed top-0 left-0 z-50 w-full text-white bg-black">
+    <div className="fixed top-0 z-50 w-full text-white bg-black">
       <div className="flex items-center justify-between h-[80px] px-4 md:px-12">
-        <img
-          onClick={onClickHome}
-          className="w-[130px] cursor-pointer"
-          src="/src/assets/logo.png"
-          alt="logo"
-        />
+        <div className="flex items-center space-x-4">
+          <img
+            onClick={() => navigate("/")}
+            className="w-[130px] cursor-pointer"
+            src="/src/assets/logo.png"
+            alt="logo"
+          />
+          <div className="relative flex items-center text-white focus-within:text-amber-400">
+            <label className="mb-2 text-l sm:hidden" onClick={toggleSearch}>
+              <FaSearch />
+            </label>
+            {showSearch && (
+              <input
+                type="text"
+                id="search"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="ml-[10px] w-[200px] p-2 text-white transition duration-300 bg-black border rounded border-zinc-400 focus:border-amber-400 focus:outline-none focus:text-amber-400"
+                placeholder="검색"
+                autoComplete="off"
+              />
+            )}
+
+            {/* 640px 이상 */}
+            <div className="items-center hidden sm:flex">
+              <input
+                type="text"
+                id="search"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="ml-[10px] w-[250px] p-2 text-white transition duration-300 bg-black border rounded border-zinc-400 focus:border-amber-400 focus:outline-none focus:text-amber-400"
+                placeholder="검색"
+                autoComplete="off"
+              />
+            </div>
+
+            {searchResults.length > 0 && (
+              <ul className="absolute left-0 z-10 w-full text-black bg-white top-full">
+                {searchResults.map((movie) => (
+                  <li
+                    key={movie.id}
+                    className="p-2 cursor-pointer hover:bg-gray-200"
+                    onClick={() =>
+                      navigate(`/detail/${movie.title}`, { state: movie })
+                    }
+                  >
+                    {movie.title}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        </div>
 
         <ul className="items-center hidden md:flex gap-7">
-          <li className="cursor-pointer" onClick={onClickSignUp}>
+          <li className="cursor-pointer" onClick={() => navigate(`/Signup`)}>
             회원가입
           </li>
-          <li className="cursor-pointer" onClick={onClickLogIn}>
+          <li className="cursor-pointer" onClick={() => navigate(`/Login`)}>
             로그인
           </li>
           <li className="text-[25px] cursor-pointer ml-auto">☾☼</li>
@@ -62,11 +128,11 @@ export default function NavBar() {
       </div>
 
       {menuOpen && (
-        <ul className="top-[80px] left-0 w-full bg-black text-center flex flex-col gap-7 py-4">
-          <li className="cursor-pointer" onClick={onClickSignUp}>
+        <ul className="fixed top-[80px] left-0 w-full bg-black text-center flex flex-col gap-7 py-4">
+          <li className="cursor-pointer" onClick={() => navigate(`/Signup`)}>
             회원가입
           </li>
-          <li className="cursor-pointer" onClick={onClickLogIn}>
+          <li className="cursor-pointer" onClick={() => navigate(`/Login`)}>
             로그인
           </li>
           <li className="text-[25px] cursor-pointer">☾☼</li>

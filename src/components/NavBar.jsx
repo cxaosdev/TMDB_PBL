@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { FaBars, FaTimes, FaSearch } from "react-icons/fa";
+import { FaBars, FaTimes, FaSearch, FaUserCircle } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import useDebounce from "../hooks/useDebounce";
+import { supabase } from "../supabaseClient";
 
 export default function NavBar() {
   const navigate = useNavigate();
@@ -9,22 +10,28 @@ export default function NavBar() {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [showSearch, setShowSearch] = useState(false);
+  const [user, setUser] = useState(null);
+  const [showDropdown, setShowDropdown] = useState(false);
   const debouncedSearchQuery = useDebounce(searchQuery, 500);
 
   useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth >= 640) {
-        setShowSearch(false);
-      }
-      if (window.innerWidth >= 768) {
-        setMenuOpen(false);
-      }
+    const checkUser = async () => {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      setUser(user);
     };
 
-    window.addEventListener("resize", handleResize);
+    checkUser();
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((event, session) => {
+      setUser(session?.user || null);
+    });
 
     return () => {
-      window.removeEventListener("resize", handleResize);
+      subscription?.unsubscribe();
     };
   }, []);
 
@@ -34,6 +41,16 @@ export default function NavBar() {
 
   const toggleSearch = () => {
     setShowSearch(!showSearch);
+  };
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    setUser(null);
+    navigate("/");
+  };
+
+  const handleProfileClick = () => {
+    setShowDropdown(!showDropdown);
   };
 
   useEffect(() => {
@@ -63,6 +80,7 @@ export default function NavBar() {
             src="/src/assets/logo.png"
             alt="logo"
           />
+
           <div className="relative flex items-center text-white focus-within:text-amber-400">
             <label className="mb-2 text-l sm:hidden" onClick={toggleSearch}>
               <FaSearch />
@@ -111,12 +129,42 @@ export default function NavBar() {
         </div>
 
         <ul className="items-center hidden md:flex gap-7">
-          <li className="cursor-pointer" onClick={() => navigate(`/Signup`)}>
-            회원가입
-          </li>
-          <li className="cursor-pointer" onClick={() => navigate(`/Login`)}>
-            로그인
-          </li>
+          {!user ? (
+            <>
+              <li
+                className="cursor-pointer"
+                onClick={() => navigate(`/Signup`)}
+              >
+                회원가입
+              </li>
+              <li className="cursor-pointer" onClick={() => navigate(`/Login`)}>
+                로그인
+              </li>
+            </>
+          ) : (
+            <li className="relative">
+              <FaUserCircle
+                className="text-3xl cursor-pointer"
+                onClick={handleProfileClick}
+              />
+              {showDropdown && (
+                <ul className="absolute w-[130px] right-0 mt-2 text-black bg-white border rounded shadow-md">
+                  <li
+                    className="p-2 cursor-pointer hover:bg-gray-200"
+                    onClick={() => navigate(`/MyPage`)}
+                  >
+                    마이 페이지
+                  </li>
+                  <li
+                    className="p-2 cursor-pointer hover:bg-gray-200"
+                    onClick={handleLogout}
+                  >
+                    로그아웃
+                  </li>
+                </ul>
+              )}
+            </li>
+          )}
           <li className="text-[25px] cursor-pointer ml-auto">☾☼</li>
         </ul>
 
@@ -129,12 +177,31 @@ export default function NavBar() {
 
       {menuOpen && (
         <ul className="fixed top-[80px] left-0 w-full bg-black text-center flex flex-col gap-7 py-4">
-          <li className="cursor-pointer" onClick={() => navigate(`/Signup`)}>
-            회원가입
-          </li>
-          <li className="cursor-pointer" onClick={() => navigate(`/Login`)}>
-            로그인
-          </li>
+          {!user ? (
+            <>
+              <li
+                className="cursor-pointer"
+                onClick={() => navigate(`/Signup`)}
+              >
+                회원가입
+              </li>
+              <li className="cursor-pointer" onClick={() => navigate(`/Login`)}>
+                로그인
+              </li>
+            </>
+          ) : (
+            <>
+              <li
+                className="cursor-pointer"
+                onClick={() => navigate(`/profile`)}
+              >
+                마이 페이지
+              </li>
+              <li className="cursor-pointer" onClick={handleLogout}>
+                로그아웃
+              </li>
+            </>
+          )}
           <li className="text-[25px] cursor-pointer">☾☼</li>
         </ul>
       )}

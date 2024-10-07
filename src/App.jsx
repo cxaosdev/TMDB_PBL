@@ -22,9 +22,9 @@ function App() {
     <>
       <NavBar></NavBar>
       <div>
-        <div className="flex flex-wrap justify-center movies-container bg-zinc-900 pt-[110px]">
+        <div className="p-20 flex flex-wrap justify-between movies-container bg-zinc-900 pt-[110px]">
           <Slider movies={movies} />
-          <p className="w-[100%] text-left text-white ml-[25px] text-xl font-bold">
+          <p className="mt-[30px] mb-[10px] w-[100%] text-left text-white ml-[20px] text-3xl font-bold">
             현재 상영 중인 영화
           </p>
           {movies.map((item, index) => (

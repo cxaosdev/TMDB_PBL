@@ -18,7 +18,11 @@ export default function Movie(props) {
       onClick={onClickMovieDetail}
     >
       <div className="relative">
-        <img src={BASE_URL + props.poster_path} alt="영화포스터" />
+        <img
+          className="w-[20vw]"
+          src={BASE_URL + props.poster_path}
+          alt="영화포스터"
+        />
         <div className="absolute bottom-0 left-0 right-0 h-[15%] bg-gradient-to-t from-black to-transparent"></div>
       </div>
       <div className="mt-[10px] movie-info text-white text-center">

@@ -6,10 +6,10 @@ import MovieCard from "./MovieCard";
 export default function Slider({ movies }) {
   return (
     <>
-      <p className="w-[100%] text-left text-white ml-[25px] text-xl font-bold">
+      <p className="mt-[10px] mb-[10px] w-[100%] text-left text-white ml-[20px] text-3xl font-bold">
         오늘의 인기 영화
       </p>
-      <Swiper className="bg-zinc-900" spaceBetween={-10} slidesPerView={7}>
+      <Swiper className="bg-zinc-900" spaceBetween={-30} slidesPerView={7}>
         {movies.map((movie, index) => (
           <SwiperSlide key={index}>
             <MovieCard

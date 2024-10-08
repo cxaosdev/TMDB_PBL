@@ -77,7 +77,7 @@ export default function NavBar() {
           <img
             onClick={() => navigate("/")}
             className="w-[130px] cursor-pointer"
-            src="/src/assets/logo.png"
+            src="/public/assets/logo.png"
             alt="logo"
           />
 

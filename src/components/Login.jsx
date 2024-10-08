@@ -76,7 +76,7 @@ export default function Login() {
               onClick={handleGoogleSignIn}
               className="cursor-pointer flex items-center justify-center w-full p-1 mt-4 text-black font-bold transition duration-300 bg-[#F2F2F2] rounded hover:bg-zinc-400"
             >
-              <img className="h-[40px]" src="/src/assets/pngwing.com.png" />
+              <img className="h-[40px]" src="/public/assets/pngwing.com.png" />
               Continue with Google
             </button>
             <button
@@ -85,7 +85,7 @@ export default function Login() {
             >
               <img
                 className="h-[20px] mr-[10px] text-[#191919]"
-                src="/src/assets/kakao.png"
+                src="/public/assets/kakao.png"
               />
               Continue with Kakao
             </button>

@@ -145,7 +145,7 @@ export default function Signup() {
             onClick={handleGoogleSignIn}
             className="h-[50px] cursor-pointer flex items-center justify-center w-full p-1 mt-4 text-black font-bold transition duration-300 bg-[#F2F2F2] rounded hover:bg-zinc-400"
           >
-            <img className="h-[40px]" src="/src/assets/pngwing.com.png" />
+            <img className="h-[40px]" src="/public/assets/pngwing.com.png" />
             Sign up with Google
           </button>
 
@@ -155,7 +155,7 @@ export default function Signup() {
           >
             <img
               className="h-[20px] mr-[10px] text-[#191919]"
-              src="/src/assets/kakao.png"
+              src="/public/assets/kakao.png"
             />
             Start with Kakao
           </button>

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import NavBar from "./NavBar";
 import { supabase } from "../supabaseClient";
 import { useNavigate } from "react-router-dom";
-import { handleGoogleSignIn } from "./Signup";
+import { handleGoogleSignIn, handleKakaoSignIn } from "./Signup";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -68,9 +68,9 @@ export default function Login() {
 
             <button
               type="submit"
-              className="w-full py-3 mt-6 text-white transition duration-300 rounded bg-amber-500 hover:bg-amber-600"
+              className="w-full py-3 mt-6 font-bold text-white transition duration-300 rounded bg-amber-500 hover:bg-amber-600"
             >
-              로그인
+              Log In
             </button>
             <button
               onClick={handleGoogleSignIn}
@@ -78,6 +78,16 @@ export default function Login() {
             >
               <img className="h-[40px]" src="/src/assets/pngwing.com.png" />
               Continue with Google
+            </button>
+            <button
+              onClick={handleKakaoSignIn}
+              className="h-[50px] cursor-pointer flex items-center justify-center w-full p-1 mt-4 text-black font-bold transition duration-300 bg-[#FEE500] rounded hover:bg-zinc-400"
+            >
+              <img
+                className="h-[20px] mr-[10px] text-[#191919]"
+                src="/src/assets/kakao.png"
+              />
+              Continue with Kakao
             </button>
           </form>
           <div className="flex items-center justify-center mt-4">

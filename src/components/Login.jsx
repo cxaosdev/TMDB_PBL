@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import NavBar from "./NavBar";
 import { supabase } from "../supabaseClient";
 import { useNavigate } from "react-router-dom";
@@ -12,6 +12,12 @@ export default function Login() {
 
   const inputClass =
     "w-full p-4 text-white transition duration-300 bg-black border border-zinc-400 rounded focus:border-amber-400 focus:outline-none focus:text-amber-400";
+
+  useEffect(() => {
+    setEmail("");
+    setPassword("");
+    setError("");
+  }, []);
 
   const handleLogin = async (e) => {
     e.preventDefault();

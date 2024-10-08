@@ -1,11 +1,16 @@
 import React, { useState } from "react";
-import { FaCalendarAlt, FaGoogle } from "react-icons/fa";
 import NavBar from "./NavBar";
 import { supabase } from "../supabaseClient";
 
 export const handleGoogleSignIn = async () => {
   const { error } = await supabase.auth.signInWithOAuth({
     provider: "google",
+    options: {
+      queryParams: {
+        access_type: "offline",
+        prompt: "consent",
+      },
+    },
   });
   if (error) {
     setError(error.message);
@@ -15,6 +20,10 @@ export const handleGoogleSignIn = async () => {
 export const handleKakaoSignIn = async () => {
   const { error } = await supabase.auth.signInWithOAuth({
     provider: "kakao",
+    queryParams: {
+      access_type: "offline",
+      prompt: "consent",
+    },
   });
   if (error) {
     setError(error.message);

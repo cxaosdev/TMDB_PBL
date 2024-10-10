@@ -70,6 +70,22 @@ export default function NavBar() {
     }
   }, [debouncedSearchQuery]);
 
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 768) {
+        setMenuOpen(false);
+      }
+      if (window.innerWidth >= 640) {
+        setShowSearch(false);
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
   return (
     <div className="fixed top-0 z-50 w-full text-white bg-black">
       <div className="flex items-center justify-between h-[80px] px-4 md:px-12">
